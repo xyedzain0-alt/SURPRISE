@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>sorry?</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #e59ba8;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+            position: relative;
+        }
+
+        /* Floating Hearts Background Animation */
+        .heart-particle {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 20px;
+            pointer-events: none;
+            animation: floatUp 4s linear infinite;
+            bottom: -20px;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-105vh) translateX(50px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .card {
+            text-align: center;
+            padding: 25px 15px;
+            width: 100%;
+            max-width: 320px; 
+            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        .gif-container {
+            width: 150px; 
+            height: 150px;
+            margin: 0 auto 15px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Pure CSS Animated Cat Canvas */
+        .cat-face {
+            width: 120px;
+            height: 100px;
+            background: #ffffff;
+            border-radius: 50% 50% 45% 45%;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Ears */
+        .cat-face::before, .cat-face::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            width: 0;
+            height: 0;
+            border-bottom: 30px solid #ffffff;
+        }
+        .cat-face::before {
+            left: 5px;
+            border-left: 15px solid transparent;
+            border-right: 25px solid transparent;
+            transform: rotate(-20deg);
+        }
+        .cat-face::after {
+            right: 5px;
+            border-right: 15px solid transparent;
+            border-left: 25px solid transparent;
+            transform: rotate(20deg);
+        }
+
+        /* Inner Ear Pink */
+        .inner-ear {
+            position: absolute;
+            top: 2px;
+            width: 0;
+            height: 0;
+            border-bottom: 18px solid #ffccd5;
+        }
+        .left-ear {
+            left: 14px;
+            border-left: 8px solid transparent;
+            border-right: 15px solid transparent;
+            transform: rotate(-20deg);
+        }
+        .right-ear {
+            right: 14px;
+            border-right: 8px solid transparent;
+            border-left: 15px solid transparent;
+            transform: rotate(20deg);
+        }
+
+        /* Eyes container */
+        .eyes {
+            position: absolute;
+            top: 40px;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .eye {
+            width: 14px;
+            height: 14px;
+            background: #333333;
+            border-radius: 50%;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        /* Blush */
+        .blush {
+            position: absolute;
+            top: 52px;
+            width: 18px;
+            height: 10px;
+            background: #ffb3c1;
+            border-radius: 50%;
+            opacity: 0.8;
+        }
+        .blush.left { left: 15px; }
+        .blush.right { right: 15px; }
+
+        /* Mouth */
+        .mouth {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 10px;
+            border-bottom: 3px solid #333333;
+            border-radius: 0 0 10px 10px;
+            transition: all 0.2s ease;
+        }
+
+        /* MOUTH EMOTION OVERRIDES VIA JS STYLES */
+        .mouth.sad {
+            border-bottom: none;
+            border-top: 3px solid #333333;
+            border-radius: 10px 10px 0 0;
+            top: 56px;
+        }
+        .mouth.crying {
+            border-bottom: none;
+            border-top: 3px solid #333333;
+            border-radius: 10px 10px 0 0;
+            top: 56px;
+            width: 24px;
+        }
+        .mouth.mad {
+            border-bottom: none;
+            border-top: 3.5px solid #333333;
+            border-radius: 12px 12px 0 0;
+            top: 58px;
+            width: 14px;
+        }
+        .mouth.happy {
+            border-top: none;
+            border-bottom: 4px solid #fa5252;
+            border-radius: 0 0 14px 14px;
+            height: 14px;
+            width: 22px;
+            background: transparent;
+        }
+
+        /* Tears styling */
+        .tear {
+            position: absolute;
+            width: 6px;
+            height: 15px;
+            background: #74c0fc;
+            border-radius: 50% 50% 50% 50%;
+            top: 52px;
+            display: none;
+            animation: drop 1s infinite linear;
+        }
+        @keyframes drop {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(20px); opacity: 0; }
+        }
+
+        h2 {
+            color: #ffffff;
+            font-size: 24px; 
+            font-weight: 700;
+            margin: 15px 0 2px 0;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        p {
+            color: #f7f7f7;
+            font-size: 14px;
+            margin: 0 0 25px 0;
+            font-weight: 500;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+            position: relative;
+            height: 50px;
+        }
+
+        button {
+            padding: 12px 26px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+            min-width: 95px;
+            transition: transform 0.1s ease;
+        }
+
+        #yesBtn {
+            background-color: #ffffff;
+            color: #e59ba8;
+        }
+        
+        #yesBtn:active {
+            transform: scale(0.95);
+        }
+
+        #noBtn {
+            background-color: #333333;
+            color: #ffffff;
+            position: absolute;
+            z-index: 999;
+            transition: all 0.15s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop preload="auto">
+        <source src="https://pub-c5e31b5cdafb419a86a69d5d340a9929.r2.dev/prem_ki_naiyya_remix.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="card">
+        <div class="gif-container">
+            <!-- Completely self-contained CSS layout. No external images to drop out or break -->
+            <div class="cat-face">
+                <div class="inner-ear left-ear"></div>
+                <div class="inner-ear right-ear"></div>
+                <div class="eyes">
+                    <div class="eye" id="leftEye"></div>
+                    <div class="eye" id="rightEye"></div>
+                </div>
+                <div class="blush left"></div>
+                <div class="blush right"></div>
+                <div class="mouth sad" id="catMouth"></div>
+                <div class="tear" id="leftTear" style="left: 24px;"></div>
+                <div class="tear" id="rightTear" style="right: 24px;"></div>
+            </div>
+        </div>
+        <h2 id="question">sorry yrr? 🤗</h2>
+        <p id="subtext">nhi to ekhi option h</p>
+
+        <div class="btn-container">
+            <button id="yesBtn" onclick="selectYes()">Yes</button>
+            <button id="noBtn" onmouseover="moveNoButton()" ontouchstart="moveNoButton(event)">No</button>
+        </div>
+    </div>
+
+    <script>
+        let stage = 0;
+        let musicStarted = false;
+
+        // 👇 EDIT THIS LINE WITH YOUR INSTAGRAM USERNAME 👇
+        const INSTAGRAM_USERNAME = "your_username"; 
+
+        const questions = [
+            "sorry yrrr? 🤗",
+            "Please think again! 🤔",
+            "Ek aur baar Soch lo! 🥺",
+            "hibbu pls Man jao na! Kitna code likh waogi 😭"
+        ];
+
+        const subtexts = [
+            "nhi to ekhi option h",
+            "itni jaldi na maat bolo! 🥺",
+            "kyu aisa kar rahi ho Pls Maan jao 😭",
+            "bhot glt baat hai yr x"
+        ];
+
+        // 1. Live Background Generator
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart-particle");
+            heart.innerHTML = ["❤️", "💖", "💝", "🌸"][Math.floor(Math.random() * 4)];
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 2 + 3) + "s"; 
+            heart.style.fontSize = (Math.random() * 15 + 15) + "px";
+            document.body.appendChild(heart);
+            
+            setTimeout(() => { heart.remove(); }, 5000);
+        }
+        setInterval(createHeart, 400);
+
+        // 2. Safe Music Player
+        function startMusic() {
+            if (!musicStarted) {
+                const audio = document.getElementById("bgMusic");
+                audio.play()
+                    .then(() => { musicStarted = true; })
+                    .catch(() => console.log("Audio deferred to solid user click."));
+            }
+        }
+
+        // Updates dynamic expression mechanics completely locally
+        function updateCatExpression(currentStage) {
+            const mouth = document.getElementById("catMouth");
+            const leftEye = document.getElementById("leftEye");
+            const rightEye = document.getElementById("rightEye");
+            const leftTear = document.getElementById("leftTear");
+            const rightTear = document.getElementById("rightTear");
+
+            // Reset base parameters safely
+            mouth.className = "mouth";
+            leftTear.style.display = "none";
+            rightTear.style.display = "none";
+            leftEye.style.height = "14px";
+            rightEye.style.height = "14px";
+            leftEye.style.borderRadius = "50%";
+            rightEye.style.borderRadius = "50%";
+
+            if (currentStage === 1) {
+                // Worried / thinking cat expression
+                mouth.classList.add("sad");
+                leftEye.style.height = "6px";
+                leftEye.style.borderRadius = "2px";
+            } else if (currentStage === 2) {
+                // Crying / sobbing face execution
+                mouth.classList.add("crying");
+                leftTear.style.display = "block";
+                rightTear.style.display = "block";
+            } else if (currentStage >= 3) {
+                // Angry / Pouting cat execution
+                mouth.classList.add("mad");
+                leftEye.style.height = "4px";
+                rightEye.style.height = "4px";
+            }
+        }
+
+        // 3. Evasive No Button Engine
+        function moveNoButton(event) {
+            if(event) event.preventDefault(); 
+            
+            startMusic(); 
+            stage++;
+
+            if (stage < 4) {
+                document.getElementById("question").innerText = questions[stage];
+                document.getElementById("subtext").innerText = subtexts[stage];
+                updateCatExpression(stage);
+            }
+
+            const noBtn = document.getElementById("noBtn");
+            const padding = 60; 
+            
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+            const randomX = Math.max(padding / 2, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding / 2, Math.floor(Math.random() * maxY));
+
+            noBtn.style.position = "fixed";
+            noBtn.style.left = randomX + "px";
+            noBtn.style.top = randomY + "px";
+
+            // Yes button grows to slowly overtake user screen real-estate
+            const yesBtn = document.getElementById("yesBtn");
+            const currentSize = parseFloat(window.getComputedStyle(yesBtn).fontSize);
+            if (currentSize < 45) { 
+                yesBtn.style.fontSize = (currentSize + 2.5) + "px";
+                yesBtn.style.padding = (parseFloat(window.getComputedStyle(yesBtn).paddingTop) + 1.5) + "px " + (parseFloat(window.getComputedStyle(yesBtn).paddingLeft) + 3) + "px";
+            }
+        }
+
+        // 4. Final Processing & Redirection Execution
+        function selectYes() {
+            const audio = document.getElementById("bgMusic");
+            audio.play().catch(e => console.log(e));
+            
+            document.getElementById("question").innerText = "I knew it! ap bht achi ho 🥰";
+            document.getElementById("subtext").innerText = "Opening Instagram... ❤️";
+            
+            // Switch instantly to happy cheerful cat face
+            const mouth = document.getElementById("catMouth");
+            mouth.className = "mouth happy";
+            document.getElementById("leftTear").style.display = "none";
+            document.getElementById("rightTear").style.display = "none";
+            
+            document.querySelector(".btn-container").style.display = "none";
+
+            // Redirects to Instagram profile after 2.5 seconds
+            setTimeout(() => {
+                window.location.href = `https://instagram.com/_u/${INSTAGRAM_USERNAME}`;
+                setTimeout(() => {
+                    window.location.href = `https://instagram.com/${INSTAGRAM_USERNAME}`;
+                }, 500);
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
+
+  
